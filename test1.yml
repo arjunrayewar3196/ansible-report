@@ -1,0 +1,14 @@
+- hosts: localhost
+  become: true
+  gather_facts: true
+  vars:
+    headers: s.no,hostname, Distro,kernel,pool_members,pool,vipnames
+  tasks:
+    - name: debug the msg
+      ansible.builtin.lineinfile:
+        dest: /home/ec2-user/Ansible-test/userdata.csv
+        line: "{{ headers }}"
+        create: true
+        state: present
+    #  delegate_to: localhost
+    #  run_once: true

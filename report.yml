@@ -1,17 +1,17 @@
 ---
 - name: Generate an HTML report from jinja template
-  hosts: all
+  hosts: localhost
   gather_facts: true
   vars:
     #email settings
-    email_subject: Patching Report
-    email_host: 10.1.5.25
-    email_from: system@gregsowell.com
-    email_to: gsowell@redhat.com
+    # email_subject: Patching Report
+    # email_host: 3.12.71.145
+    # email_from: arjunrayewar0305@gmail.com
+    # email_to: arjunrayewar0305@gmail.com
 
     #random settings
-    csv_path: /tmp
-    csv_filename: report.csv
+    csv_path: /home/ec2-user/Ansible-test/
+    csv_filename: repor3.csv
     headers: Hostname,Distro Ver,Kernel Ver,Last Rebooted
 
   tasks:
@@ -36,27 +36,27 @@
       state: present
     delegate_to: localhost
 
-  - name: Read in CSV to variable
-    community.general.read_csv:
-      path: "{{ csv_path }}/{{ csv_filename }}"
-    register: csv_file
-    delegate_to: localhost
-    run_once: true
+  # - name: Read in CSV to variable
+  #   community.general.read_csv:
+  #     path: "{{ csv_path }}/{{ csv_filename }}"
+  #   register: csv_file
+  #   delegate_to: localhost
+  #   run_once: true
 
 #  - name: debug csv_file
 #    debug:
 #      var: csv_file
 #    run_once: true
 
-  - name: Send Email
-    community.general.mail:
-      host: "{{ email_host }}"
-      from: "{{ email_from }}"
-      port: 25
-      to: "{{ email_to }}"
-      subject: "[Ansible] {{ email_subject }}"
-      body: "{{ lookup('template', 'report.html.j2') }}"
-      attach: "{{ csv_path }}/{{ csv_filename }}"
-      subtype: html
-    delegate_to: localhost
-    run_once: true
+  # - name: Send Email
+  #   community.general.mail:
+  #     host: "{{ email_host }}"
+  #     from: "{{ email_from }}"
+  #     port: 25
+  #     to: "{{ email_to }}"
+  #     subject: "[Ansible] {{ email_subject }}"
+  #     body: "{{ lookup('template', 'report.html.j2') }}"
+  #     attach: "{{ csv_path }}/{{ csv_filename }}"
+  #     subtype: html
+  #   delegate_to: localhost
+  #   run_once: true
