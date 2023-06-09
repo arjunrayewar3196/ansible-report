@@ -1,0 +1,22 @@
+- name: Convert dictionary to string
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    data:
+      addresses:
+        - "10.85.176.4%1"
+        - "10.85.176.5%1"
+      members:
+        - "WZVZUGJKRTWH001.WIL.CSC.LOCAL:18080"
+        - "WZVZUGJKRTWH002.WIL.CSC.LOCAL:18080"
+
+  tasks:
+    - name: Convert dictionary to string
+      set_fact:
+        data_string: "{{ data | to_json | string }}"
+      run_once: true
+
+    - name: Print the data string
+      debug:
+        var: data_string
