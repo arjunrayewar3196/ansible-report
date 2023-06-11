@@ -1,0 +1,20 @@
+---
+- name: Change LTM Pool to GTM Pool
+  hosts: your_host
+  gather_facts: no
+  
+  tasks:
+    - name: Change LTM Pool to GTM Pool
+      bigip_pool:
+        server: your_bigip_server
+        user: your_username
+        password: your_password
+        validate_certs: no
+        state: present
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        load_balancing_mode: "global"
+        monitors: "{{ item.monitors }}"
+      with_items:
+        - { name: 'pool1', description: 'Pool 1 Description', monitors: ['http', 'icmp'] }
+        - { name: 'pool2', description: 'Pool 2 Description', monitors: ['https'] }
