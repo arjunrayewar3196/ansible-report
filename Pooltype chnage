@@ -1,0 +1,63 @@
+
+
+---
+
+- name: Change F5 Pool Type
+
+  hosts: f5
+
+  connection: local
+
+  gather_facts: no
+
+  tasks:
+
+    - name: Authenticate with F5 BIG-IP
+
+      bigip_login:
+
+        server: "{{ inventory_hostname }}"
+
+        user: "{{ f5_username }}"
+
+        password: "{{ f5_password }}"
+
+    - name: Change pool type
+
+      bigip_pool:
+
+        name: "{{ pool_name }}"
+
+        lb_method: "{{ new_lb_method }}"
+
+        monitor: "{{ new_monitor }}"
+
+      delegate_to: localhost
+
+    - name: Save F5 configuration
+
+      bigip_save_config:
+
+        save: true
+
+    - name: Log out of F5 BIG-IP
+
+      bigip_logout:
+
+        server: "{{ inventory_hostname }}"
+
+  vars:
+
+    f5_username: "admin"
+
+    f5_password: "password"
+
+    pool_name: "my_pool"
+
+    new_lb_method: "least-connections-member"
+
+    new_monitor: "tcp_half_open"
+
+In this playbook, we first authenticate with the F5 BIG-IP using the `bigip_login` module. Then, we use the `bigip_pool` module to change the pool type by specifying the new load balancing method and monitor. We save the F5 configuration using the `bigip_save_config` module and log out using the `bigip_logout` module.
+
+You will need to replace `f5_username` and `f5_password` with the credentials for your F5 BIG-IP, `pool_name` with the name of your pool, `new_lb_method` with the new load balancing method you want to use, and `new_monitor` with the new monitor you want to use.
