@@ -1,0 +1,20 @@
+ ---
+- name: Change GTM Pools to LTM Pool
+  hosts: your_host
+  gather_facts: no
+  
+  tasks:
+    - name: Change GTM Pool to LTM Pool
+      bigip_pool:
+        server: your_bigip_server
+        user: your_username
+        password: your_password
+        validate_certs: no
+        state: present
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        lb_method: "{{ item.lb_method }}"
+        members: "{{ item.members }}"
+      with_items:
+        - { name: 'pool1', description: 'Pool 1 Description', lb_method: 'round-robin', members: ['10.0.0.1:80', '10.0.0.2:80'] }
+        - { name: 'pool2', description: 'Pool 2 Description', lb_method: 'least-connections-member', members: ['10.0.0.3:80', '10.0.0.4:80'] }
