@@ -1,0 +1,25 @@
+---
+- name: Gather System Facts
+  hosts: localhost
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: Gather system facts
+      set_fact:
+        ip_address: "{{ ansible_default_ipv4.address }}"
+        os_version: "{{ ansible_distribution_version }}"
+        architecture: "{{ ansible_architecture }}"
+        os_family: "{{ ansible_os_family }}"
+        mac_address: "{{ ansible_default_ipv4.macaddress }}"
+        dns_servers: "{{ ansible_dns.nameservers | join(', ') }}"
+        network_interfaces: "{{ ansible_interfaces | select('match', '^e.|^eth.|^ens.|^eno.|^bond.|^vlan.') | join(', ') }}"
+        machine_id: "{{ ansible_product_uuid }}"
+      register: system_facts
+
+    - name: Create CSV file
+      copy:
+        content: |
+          Ip Address,OS Version,Architecture,OS Family,Mac Address,DNS Servers,Network Interfaces,Machine ID
+          {{ ip_address }},{{ os_version }},{{ architecture }},{{ os_family }},{{ mac_address }},{{ dns_servers }},{{ network_interfaces }},{{ machine_id }}
+        dest: system_facts1.csv
